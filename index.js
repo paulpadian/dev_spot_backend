@@ -21,6 +21,8 @@ const uri = process.env.MONGOD_URI
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(uri, { useNewUrlParser: true });
 client.connect(err => {
+  console.log("🧂")
+  console.log(err)
   const collection = client.db("test").collection("devices");
   // perform actions on the collection object
   client.close();
