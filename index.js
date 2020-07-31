@@ -42,14 +42,13 @@ mongoose.connect(uri, {
 
 
 mongoose.connection
-  .once("open", () => console.log("Successfully connected to MongoDB"))
   .on("error", (error) => {
     console.warn("Warning", error);
   });
 
 // setup routes
 app.get('/', (req, res) => {
-  res.send('Nothing to see here, move along human')
+  res.json('Nothing to see here, move along human')
 })
 app.use('/users', require('./routes/userRoutes'))
 app.use('/projects', require('./routes/projectRouter'))
