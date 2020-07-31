@@ -14,17 +14,33 @@ app.use(cors({
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server is listening on PORT: ${PORT}`)
+
+
+
+const uri = process.env.MONGOD_URI
+const MongoClient = require('mongodb').MongoClient;
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
 })
 
 // Connect to Mongo
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/dev_spot_v2", {
+
+mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
-});
+})
+.then(() => {
+   console.log("Successfully connected to MongoDB")
+})
+.catch((err) => {
+  console.log(err)
+})
+
+
 mongoose.connection
   .once("open", () => console.log("Successfully connected to MongoDB"))
   .on("error", (error) => {
@@ -32,5 +48,12 @@ mongoose.connection
   });
 
 // setup routes
+app.get('/', (req, res) => {
+  res.send('Nothing to see here, move along human')
+})
 app.use('/users', require('./routes/userRoutes'))
 app.use('/projects', require('./routes/projectRouter'))
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on PORT: ${PORT}`)
+})
